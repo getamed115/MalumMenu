@@ -4,25 +4,48 @@ namespace MalumMenu;
 
 public class ConfigTab : ITab
 {
-    public string name => "Config";
+    public string Name => "Config";
 
     public void Draw()
     {
-        GUILayout.BeginVertical(GUILayout.Width(MenuUI.windowWidth * 0.425f));
+        GUILayout.BeginVertical(
+            GUILayout.ExpandWidth(true)
+        );
 
-        DrawGeneral();
+        CheatToggles.openConfig = DrawToggle(
+            CheatToggles.openConfig,
+            "Open Config"
+        );
+
+        CheatToggles.reloadConfig = DrawToggle(
+            CheatToggles.reloadConfig,
+            "Reload Config"
+        );
+
+        CheatToggles.saveProfile = DrawToggle(
+            CheatToggles.saveProfile,
+            "Save to Profile"
+        );
+
+        CheatToggles.loadProfile = DrawToggle(
+            CheatToggles.loadProfile,
+            "Load from Profile"
+        );
 
         GUILayout.EndVertical();
     }
 
-    private void DrawGeneral()
+    private static bool DrawToggle(
+        bool currentValue,
+        string label
+    )
     {
-        CheatToggles.openConfig = GUILayout.Toggle(CheatToggles.openConfig, " Open Config");
-
-        CheatToggles.reloadConfig = GUILayout.Toggle(CheatToggles.reloadConfig, " Reload Config");
-
-        CheatToggles.saveProfile = GUILayout.Toggle(CheatToggles.saveProfile, " Save to Profile");
-
-        CheatToggles.loadProfile = GUILayout.Toggle(CheatToggles.loadProfile, " Load from Profile");
+        return GUILayout.Toggle(
+            currentValue,
+            label,
+            GUIStylePreset.NormalToggle,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(32f)
+        );
     }
 }

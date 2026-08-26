@@ -1,8 +1,9 @@
-using UnityEngine;
 using Il2CppSystem.Collections.Generic;
 using Sentry.Internal.Extensions;
+using UnityEngine;
 
 namespace MalumMenu;
+
 public static class PlayerPickMenu
 {
     public static ShapeshifterMinigame playerpickMenu;
@@ -19,7 +20,7 @@ public static class PlayerPickMenu
         return Object.Instantiate(rolePrefab?.Cast<ShapeshifterRole>(), GameData.Instance.transform).ShapeshifterMenu;
     }
 
-    // Open a PlayerPickMenu to pick a specific player to target
+    // Open a PlayerPickMenu to pick a specific Player to target
     public static void OpenPlayerPickMenu(List<NetworkedPlayerInfo> playerList, Il2CppSystem.Action action)
     {
         isActive = true;
@@ -30,7 +31,7 @@ public static class PlayerPickMenu
         playerpickMenu = Object.Instantiate(GetShapeshifterMenu(), Camera.main.transform, false);
 
         playerpickMenu.transform.localPosition = new Vector3(0f, 0f, -50f);
-		playerpickMenu.Begin(null);
+        playerpickMenu.Begin(null);
     }
 
     // Returns a custom NetworkedPlayerInfo that can be used as a PPM choice
@@ -43,9 +44,7 @@ public static class PlayerPickMenu
         customChoice.Outfits[PlayerOutfitType.Default] = outfit;
 
         if (!role.IsNull())
-        {
             customChoice.Role = role;
-        }
 
         return customChoice;
     }

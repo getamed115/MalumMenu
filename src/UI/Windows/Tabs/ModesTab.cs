@@ -4,23 +4,30 @@ namespace MalumMenu;
 
 public class ModesTab : ITab
 {
-    public string name => "Modes";
+    public string Name => "Modes";
 
     public void Draw()
     {
-        GUILayout.BeginVertical(GUILayout.Width(MenuUI.windowWidth * 0.425f));
+        GUILayout.BeginVertical(
+            GUILayout.ExpandWidth(true)
+        );
 
-        DrawGeneral();
+        CheatToggles.stealthMode = GUILayout.Toggle(
+            CheatToggles.stealthMode,
+            "Stealth Mode",
+            GUIStylePreset.NormalToggle,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(32f)
+        );
+
+        CheatToggles.panicMode = GUILayout.Toggle(
+            CheatToggles.panicMode,
+            "Panic Mode",
+            GUIStylePreset.NormalToggle,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(32f)
+        );
 
         GUILayout.EndVertical();
-    }
-
-    private void DrawGeneral()
-    {
-        CheatToggles.rgbMode = GUILayout.Toggle(CheatToggles.rgbMode, " RGB Mode");
-
-        CheatToggles.stealthMode = GUILayout.Toggle(CheatToggles.stealthMode, " Stealth Mode");
-
-        CheatToggles.panicMode = GUILayout.Toggle(CheatToggles.panicMode, " Panic Mode");
     }
 }

@@ -1,143 +1,81 @@
 using HarmonyLib;
 using System;
 using UnityEngine;
-using System.Text.RegularExpressions;
 
 namespace MalumMenu;
 
 [HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))]
 public static class ChatController_AddChat
 {
-	// Prefix patch of ChatController.AddChat to receive ghost messages if CheatSettings.seeGhosts is enabled even if LocalPlayer is alive
-	// Basically does what the original method did with the required modifications
-	public static bool Prefix(PlayerControl sourcePlayer, string chatText, bool censor, ChatController __instance)
+    // Prefix patch of ChatController.AddChat to receive ghost messages if CheatSettings.seeGhosts is enabled even if LocalPlayer is alive
+    // Basically does what the original method did with the required modifications
+    public static bool Prefix(PlayerControl sourcePlayer, string chatText, bool censor, ChatController __instance)
     {
-		// Simply run original method if seeGhosts is disabled or LocalPlayer already dead
+        // Simply run original method if seeGhosts is disabled or LocalPlayer already dead
         if (!CheatToggles.seeGhosts || PlayerControl.LocalPlayer.Data.IsDead) return true;
 
+        // Ensure both the source Player sending the message and the local Player exist
         if (!sourcePlayer || !PlayerControl.LocalPlayer) return true;
 
-		NetworkedPlayerInfo data = PlayerControl.LocalPlayer.Data;
-		NetworkedPlayerInfo data2 = sourcePlayer.Data;
+        // Cache Player data references
+        NetworkedPlayerInfo localPlayerData = PlayerControl.LocalPlayer.Data;
+        NetworkedPlayerInfo sourcePlayerData = sourcePlayer.Data;
 
-		if (data2 == null || data == null) return true; // Remove isDead check for LocalPlayer
+        // Ensure underlying data is valid before processing
+        if (sourcePlayerData == null || localPlayerData == null) return true; // Remove isDead check for LocalPlayer
 
-		ChatBubble pooledBubble = __instance.GetPooledBubble();
+        // Fetch a pooled chat bubble instance from the chat controller's object pool
+        ChatBubble pooledBubble = __instance.GetPooledBubble();
 
-		try
-		{
-			pooledBubble.transform.SetParent(__instance.scroller.Inner);
-			pooledBubble.transform.localScale = Vector3.one;
-			bool flag = sourcePlayer == PlayerControl.LocalPlayer;
-			if (flag)
-			{
-				pooledBubble.SetRight();
-			}
-			else
-			{
-				pooledBubble.SetLeft();
-			}
-			bool didVote = MeetingHud.Instance && MeetingHud.Instance.DidVote(sourcePlayer.PlayerId);
-			pooledBubble.SetCosmetics(data2);
-			__instance.SetChatBubbleName(pooledBubble, data2, data2.IsDead, didVote, PlayerNameColor.Get(data2), null);
-			if (censor && AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat)
-			{
-				chatText = BlockedWords.CensorWords(chatText, false);
-			}
-			pooledBubble.SetText(chatText);
-			pooledBubble.AlignChildren();
-			__instance.AlignAllBubbles();
-			if (!__instance.IsOpenOrOpening && __instance.notificationRoutine == null)
-			{
-				__instance.notificationRoutine = __instance.StartCoroutine(__instance.BounceDot());
-			}
-			if (!flag && !__instance.IsOpenOrOpening)
-			{
-				SoundManager.Instance.PlaySound(__instance.messageSound, false).pitch = 0.5f + sourcePlayer.PlayerId / 15f;
-				__instance.chatNotification.SetUp(sourcePlayer, chatText);
-			}
-		}
-		catch (Exception message)
-		{
-			ChatController.Logger.Error(message.ToString(), null);
-			__instance.chatBubblePool.Reclaim(pooledBubble);
-		}
-
-        return false; // Skips the original method completly
-    }
-}
-
-[HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
-public static class ChatController_Update
-{
-    // Postfix patch of ChatController.Update to unlock longer message length
-    public static void Postfix(ChatController __instance)
-    {
-        //__instance.freeChatField.textArea.allowAllCharacters = CheatToggles.chatJailbreak; // Not really used by the game's code, but I include it anyway
-        //__instance.freeChatField.textArea.AllowSymbols = true; // Allow sending certain symbols
-        //__instance.freeChatField.textArea.AllowEmail = CheatToggles.chatJailbreak; // Allow sending email addresses when chatJailbreak is enabled
-        //__instance.freeChatField.textArea.AllowPaste = CheatToggles.chatJailbreak; // Allow pasting from clipboard in chat when chatJailbreak is enabled
-
-        if (CheatToggles.longerMessages)
-		{
-			// Increasing the maximum length by 20 characters still avoids anticheat kicks
-            __instance.freeChatField.textArea.characterLimit = 120;
-        }
-		else
-		{
-            __instance.freeChatField.textArea.characterLimit = 100;
-        }
-    }
-}
-
-[HarmonyPatch(typeof(ChatController), nameof(ChatController.SendChat))]
-public static class ChatController_SendChat
-{
-    // Postfix patch of ChatController.SendChat to unlock lower chat rate limits
-    public static void Postfix(ChatController __instance)
-    {
-        if (!CheatToggles.lowerRateLimits) return;
-
-		if (__instance.timeSinceLastMessage == 0f)
-		{
-			// Decreasing rate limit by 1 sec max still avoids anticheat kicks
-			__instance.timeSinceLastMessage += 1f;
-		}
-    }
-}
-
-[HarmonyPatch(typeof(ChatController), nameof(ChatController.SendFreeChat))]
-public static class ChatController_SendFreeChat
-{
-    // Prefix patch of ChatController.SendFreeChat to allow sending URLs without being censored
-    public static bool Prefix(ChatController __instance)
-    {
-		// Only works if CheatSettings.bypassUrlBlock is enabled
-        if (!CheatToggles.bypassUrlBlock) return true;
-
-        string text = __instance.freeChatField.Text;
-
-        // Replace periods in URLs and email addresses with commas to avoid censorship
-        string modifiedText = CensorUrlsAndEmails(text);
-
-        ChatController.Logger.Debug("SendFreeChat () :: Sending message: '" + modifiedText + "'", null);
-        PlayerControl.LocalPlayer.RpcSendChat(modifiedText);
-
-        return false;
-    }
-
-    private static string CensorUrlsAndEmails(string text)
-    {
-        // Regular expression pattern to match URLs and email addresses
-        string pattern = @"(http[s]?://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(/[\w-./?%&=]*)?|([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)";
-        Regex regex = new Regex(pattern);
-
-        // Censor periods in each match
-        return regex.Replace(text, match =>
+        try
         {
-            var censored = match.Value;
-            censored = censored.Replace('.', ',');
-            return censored;
-        });
+            // Set the parent transform to the chat scroller inner container and reset scale
+            pooledBubble.transform.SetParent(__instance.scroller.Inner);
+            pooledBubble.transform.localScale = Vector3.one;
+
+            // Determine if the message was sent by the local Player to align the bubble accordingly
+            bool isLocalPlayer = sourcePlayer == PlayerControl.LocalPlayer;
+            if (isLocalPlayer)
+            {
+                pooledBubble.SetRight();
+            }
+            else
+            {
+                pooledBubble.SetLeft();
+            }
+
+            // Check if the Player voted during a meeting to display the vote indicator on the chat bubble
+            bool didVote = MeetingHud.Instance && MeetingHud.Instance.DidVote(sourcePlayer.PlayerId);
+
+            // Apply Player cosmetics and Name configuration to the chat bubble
+            pooledBubble.SetCosmetics(sourcePlayerData);
+            __instance.SetChatBubbleName(pooledBubble, sourcePlayerData, sourcePlayerData.IsDead, didVote, PlayerNameColor.Get(sourcePlayerData), null);
+
+            // Assign the chat text and align all active chat layout elements
+            pooledBubble.SetText(chatText);
+            pooledBubble.AlignChildren();
+            __instance.AlignAllBubbles();
+
+            // Trigger the notification dot bounce animation if the chat window is closed and not currently animating
+            if (!__instance.IsOpenOrOpening && __instance.notificationRoutine == null)
+            {
+                __instance.notificationRoutine = __instance.StartCoroutine(__instance.BounceDot());
+            }
+
+            // Play audio cue and set up notification toast if the message is from another Player and chat is closed
+            if (!isLocalPlayer && !__instance.IsOpenOrOpening)
+            {
+                SoundManager.Instance.PlaySound(__instance.messageSound, false).pitch = 0.5f + sourcePlayer.PlayerId / 15f;
+                __instance.chatNotification.SetUp(sourcePlayer, chatText);
+            }
+        }
+        catch (Exception exception)
+        {
+            // Log any rendering errors and return the pooled bubble back to the pool to prevent memory/UI leaks
+            ChatController.Logger.Error(exception.ToString(), null);
+            __instance.chatBubblePool.Reclaim(pooledBubble);
+        }
+
+        return false; // Skips the original method completely
     }
 }

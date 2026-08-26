@@ -2,6 +2,6 @@ namespace MalumMenu;
 
 public interface ITab
 {
-    string name { get; }
+    string Name { get; }
     void Draw();
 }

@@ -1,14 +1,11 @@
 using UnityEngine;
 
 namespace MalumMenu;
-public class HerePoint
-{
-    public PlayerControl player;
-    public SpriteRenderer sprite;
 
-    public HerePoint(PlayerControl player, SpriteRenderer sprite)
-    {
-        this.player = player;
-        this.sprite = sprite;
-    }
+public sealed class HerePoint
+{
+    public PlayerControl Player;
+    public SpriteRenderer Sprite;
+
+    public HerePoint(PlayerControl player, SpriteRenderer sprite) => (Player, Sprite) = (player, sprite);
 }

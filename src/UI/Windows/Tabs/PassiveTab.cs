@@ -4,11 +4,11 @@ namespace MalumMenu;
 
 public class PassiveTab : ITab
 {
-    public string name => "Passive";
+    public string Name => "Passive";
 
     public void Draw()
     {
-        GUILayout.BeginVertical(GUILayout.Width(MenuUI.windowWidth * 0.425f));
+        GUILayout.BeginVertical(GUILayout.Width(MenuUI.WindowWidth * 0.425f));
 
         DrawGeneral();
 
@@ -22,9 +22,5 @@ public class PassiveTab : ITab
         CheatToggles.avoidPenalties = GUILayout.Toggle(CheatToggles.avoidPenalties, " Avoid Penalties");
 
         CheatToggles.unlockFeatures = GUILayout.Toggle(CheatToggles.unlockFeatures, " Unlock Extra Features");
-
-        CheatToggles.copyLobbyCodeOnDisconnect = GUILayout.Toggle(CheatToggles.copyLobbyCodeOnDisconnect, " Copy Lobby Code on Disconnect");
-
-        CheatToggles.spoofAprilFoolsDate = GUILayout.Toggle(CheatToggles.spoofAprilFoolsDate, " Spoof Date to April 1st");
     }
 }

@@ -4,90 +4,259 @@ namespace MalumMenu;
 
 public class ESPTab : ITab
 {
-    public string name => "ESP";
+    public string Name => "ESP";
 
     public void Draw()
     {
-        GUILayout.BeginHorizontal();
+        /*
+         * Do not specify a partial window width here.
+         *
+         * The previous:
+         *
+         * GUILayout.Width(MenuUI.WindowWidth * 0.425f)
+         *
+         * restricted the tab to less than half of the available width.
+         */
 
-        GUILayout.BeginVertical(GUILayout.Width(MenuUI.windowWidth * 0.425f));
+        GUILayout.BeginVertical(
+            GUILayout.ExpandWidth(true)
+        );
 
-        DrawGeneral();
+        try
+        {
+            DrawGeneral();
+            DrawSectionSeparator();
 
-        GUILayout.Space(15);
+            bool cameraOptionsAvailable =
+                !Utils.isLobby &&
+                Utils.isInGame &&
+                !Utils.isMeeting;
 
-        DrawCamera();
+            DrawCamera(cameraOptionsAvailable);
+            DrawSectionSeparator();
 
-        GUILayout.EndVertical();
+            DrawTracers();
+            DrawSectionSeparator();
 
-        GUILayout.BeginVertical();
-
-        DrawTracers();
-
-        GUILayout.Space(15);
-
-        DrawMinimap();
-
-        GUILayout.EndVertical();
-
-        GUILayout.EndHorizontal();
+            DrawMinimap();
+        }
+        finally
+        {
+            GUILayout.EndVertical();
+        }
     }
 
-    private void DrawGeneral()
+    private static void DrawGeneral()
     {
-        CheatToggles.seePlayerInfo = GUILayout.Toggle(CheatToggles.seePlayerInfo, " See Player Info");
+        GUILayout.Label(
+            "General",
+            GUIStylePreset.TabSubtitle,
+            GUILayout.ExpandWidth(true)
+        );
 
-        CheatToggles.seeRoles = GUILayout.Toggle(CheatToggles.seeRoles, " See Roles");
+        CheatToggles.seePlayerInfo = DrawToggle(
+            CheatToggles.seePlayerInfo,
+            "See Player Info"
+        );
 
-        CheatToggles.seeGhosts = GUILayout.Toggle(CheatToggles.seeGhosts, " See Ghosts");
+        CheatToggles.seeRoles = DrawToggle(
+            CheatToggles.seeRoles,
+            "See Roles"
+        );
 
-        CheatToggles.noShadows = GUILayout.Toggle(CheatToggles.noShadows, " No Shadows");
+        CheatToggles.seeGhosts = DrawToggle(
+            CheatToggles.seeGhosts,
+            "See Ghosts"
+        );
 
-        CheatToggles.taskArrows = GUILayout.Toggle(CheatToggles.taskArrows, " Task Arrows");
+        CheatToggles.noShadows = DrawToggle(
+            CheatToggles.noShadows,
+            "No Shadows"
+        );
+        CheatToggles.revealVotes = DrawToggle(
+            CheatToggles.revealVotes,
+            "Reveal Votes"
+        );
 
-        CheatToggles.revealVotes = GUILayout.Toggle(CheatToggles.revealVotes, " Reveal Votes");
-
-        CheatToggles.seeLobbyInfo = GUILayout.Toggle(CheatToggles.seeLobbyInfo, " See Lobby Info");
+        CheatToggles.seeLobbyInfo = DrawToggle(
+            CheatToggles.seeLobbyInfo,
+            "See Lobby Info"
+        );
     }
 
-    private void DrawCamera()
+    private static void DrawCamera(bool cameraOptionsAvailable)
     {
-        GUILayout.Label("Camera", GUIStylePreset.TabSubtitle);
+        GUILayout.Label(
+            "Camera",
+            GUIStylePreset.TabSubtitle,
+            GUILayout.ExpandWidth(true)
+        );
 
-        CheatToggles.zoomOut = GUILayout.Toggle(CheatToggles.zoomOut, " Zoom Out");
+        bool previousEnabledState = GUI.enabled;
 
-        CheatToggles.spectate = GUILayout.Toggle(CheatToggles.spectate, " Spectate");
+        try
+        {
+            GUI.enabled =
+                previousEnabledState &&
+                cameraOptionsAvailable;
 
-        CheatToggles.freecam = GUILayout.Toggle(CheatToggles.freecam, " Freecam");
+            CheatToggles.zoomOut = DrawIndentedToggle(
+                CheatToggles.zoomOut,
+                "Zoom Out"
+            );
+
+            CheatToggles.spectate = DrawIndentedToggle(
+                CheatToggles.spectate,
+                "Spectate"
+            );
+
+            CheatToggles.freecam = DrawIndentedToggle(
+                CheatToggles.freecam,
+                "Freecam"
+            );
+        }
+        finally
+        {
+            GUI.enabled = previousEnabledState;
+        }
     }
 
-    private void DrawTracers()
+    private static void DrawTracers()
     {
-        GUILayout.Label("Tracers", GUIStylePreset.TabSubtitle);
+        GUILayout.Label(
+            "Tracers",
+            GUIStylePreset.TabSubtitle,
+            GUILayout.ExpandWidth(true)
+        );
 
-        CheatToggles.tracersCrew = GUILayout.Toggle(CheatToggles.tracersCrew, " Crewmates");
+        CheatToggles.tracersCrew = DrawIndentedToggle(
+            CheatToggles.tracersCrew,
+            "Crewmates"
+        );
 
-        CheatToggles.tracersImps = GUILayout.Toggle(CheatToggles.tracersImps, " Impostors");
+        CheatToggles.tracersImps = DrawIndentedToggle(
+            CheatToggles.tracersImps,
+            "Impostors"
+        );
 
-        CheatToggles.tracersGhosts = GUILayout.Toggle(CheatToggles.tracersGhosts, " Ghosts");
+        CheatToggles.tracersGhosts = DrawIndentedToggle(
+            CheatToggles.tracersGhosts,
+            "Ghosts"
+        );
 
-        CheatToggles.tracersBodies = GUILayout.Toggle(CheatToggles.tracersBodies, " Dead Bodies");
+        CheatToggles.tracersBodies = DrawIndentedToggle(
+            CheatToggles.tracersBodies,
+            "Dead Bodies"
+        );
 
-        CheatToggles.colorBasedTracers = GUILayout.Toggle(CheatToggles.colorBasedTracers, " Color-based");
+        CheatToggles.colorBasedTracers = DrawIndentedToggle(
+            CheatToggles.colorBasedTracers,
+            "Color-based"
+        );
 
-        CheatToggles.distanceBasedTracers = GUILayout.Toggle(CheatToggles.distanceBasedTracers, " Distance-based");
+        CheatToggles.distanceBasedTracers = DrawIndentedToggle(
+            CheatToggles.distanceBasedTracers,
+            "Distance-based"
+        );
     }
 
-    private void DrawMinimap()
+    private static void DrawMinimap()
     {
-        GUILayout.Label("Minimap", GUIStylePreset.TabSubtitle);
+        GUILayout.Label(
+            "Minimap",
+            GUIStylePreset.TabSubtitle,
+            GUILayout.ExpandWidth(true)
+        );
 
-        CheatToggles.mapCrew = GUILayout.Toggle(CheatToggles.mapCrew, " Crewmates");
+        CheatToggles.mapCrew = DrawIndentedToggle(
+            CheatToggles.mapCrew,
+            "Crewmates"
+        );
 
-        CheatToggles.mapImps = GUILayout.Toggle(CheatToggles.mapImps, " Impostors");
+        CheatToggles.mapImps = DrawIndentedToggle(
+            CheatToggles.mapImps,
+            "Impostors"
+        );
 
-        CheatToggles.mapGhosts = GUILayout.Toggle(CheatToggles.mapGhosts, " Ghosts");
+        CheatToggles.mapGhosts = DrawIndentedToggle(
+            CheatToggles.mapGhosts,
+            "Ghosts"
+        );
 
-        CheatToggles.colorBasedMap = GUILayout.Toggle(CheatToggles.colorBasedMap, " Color-based");
+        CheatToggles.colorBasedMap = DrawIndentedToggle(
+            CheatToggles.colorBasedMap,
+            "Color-based"
+        );
+    }
+
+    /// <summary>
+    /// Draws a primary option using the larger normal toggle style.
+    /// </summary>
+    private static bool DrawToggle(
+        bool currentValue,
+        string label
+    )
+    {
+        return GUILayout.Toggle(
+            currentValue,
+            label,
+            GUIStylePreset.NormalToggle,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(32f)
+        );
+    }
+
+    /// <summary>
+    /// Draws an option belonging to a named subsection.
+    /// </summary>
+    private static bool DrawIndentedToggle(
+        bool currentValue,
+        string label
+    )
+    {
+        return GUILayout.Toggle(
+            currentValue,
+            label,
+            GUIStylePreset.IndentedToggle,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(32f)
+        );
+    }
+
+    /// <summary>
+    /// Draws an unavailable option without allowing its value to change.
+    /// </summary>
+    private static void DrawDisabledToggle(string label)
+    {
+        bool previousState = GUI.enabled;
+
+        GUI.enabled = false;
+
+        GUILayout.Toggle(
+            false,
+            label,
+            GUIStylePreset.IndentedToggle,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(32f)
+        );
+
+        GUI.enabled = previousState;
+    }
+
+    /// <summary>
+    /// Adds vertical separation between ESP subsections.
+    /// </summary>
+    private static void DrawSectionSeparator()
+    {
+        GUILayout.Space(6f);
+
+        GUILayout.Box(
+            GUIContent.none,
+            GUIStylePreset.Separator,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(1f)
+        );
+
+        GUILayout.Space(6f);
     }
 }
