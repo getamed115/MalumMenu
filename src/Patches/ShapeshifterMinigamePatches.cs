@@ -20,10 +20,13 @@ public static class ShapeshifterMinigame_Begin
         __instance.potentialVictims = new List<ShapeshifterPanel>();
         var selectableElements = new List<UiElement>();
 
-        for (int i = 0; i < playerList.Count; i++)
+        int playerCount = playerList.Count;
+        __instance.potentialVictims.EnsureCapacity(__instance.potentialVictims.Count + playerCount);
+        selectableElements.EnsureCapacity(selectableElements.Count + playerCount);
+
+        for (int i = 0; i < playerCount; i++)
         {
-            var playerData = playerList[i];
-            var panel = CreatePanel(__instance, i, playerData);
+            var panel = CreatePanel(__instance, i, playerList[i]);
 
             __instance.potentialVictims.Add(panel);
             selectableElements.Add(panel.Button);
@@ -80,18 +83,16 @@ public static class ShapeshifterMinigame_Begin
         Vector3 position;
         Vector3 scale = new(0.9f, 1f, 1f);
 
+        position = (showRoles, showPlayerInfo) switch
+        {
+            (true, true) => new(0.33f, 0.08f, 0f),
+            (true, false) or (false, true) => new(0.3384f, 0.1125f, -0.1f),
+            _ => new(0.3384f, 0.0311f, -0.1f)
+        };
+
         if (showRoles && showPlayerInfo)
         {
-            position = new Vector3(0.33f, 0.08f, 0f);
-            scale = new Vector3(0.75f, 0.75f, 0.75f);
-        }
-        else if (showRoles || showPlayerInfo)
-        {
-            position = new Vector3(0.3384f, 0.1125f, -0.1f);
-        }
-        else
-        {
-            position = new Vector3(0.3384f, 0.0311f, -0.1f);
+            scale = new(0.75f, 0.75f, 0.75f);
         }
 
         nameText.transform.localPosition = position;

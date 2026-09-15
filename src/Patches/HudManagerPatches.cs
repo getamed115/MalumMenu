@@ -10,17 +10,16 @@ public static class HudManager_Start
     // Postfix patch of HudManager.Start to give minimap access to impostors too
     public static void Postfix(HudManager __instance)
     {
-        __instance.MapButton.OnClick.RemoveAllListeners(); // Remove previous OnClick action
+        var mapOptions = new MapOptions
+        {
+            Mode = MapOptions.Modes.Normal
+        };
 
-        // Always open normal map when map button is clicked
-        // To access sabotage map, sabotage button can be used
+        __instance.MapButton.OnClick.RemoveAllListeners();
+
         __instance.MapButton.OnClick.AddListener((Action)(() =>
         {
-            __instance.ToggleMapVisible(new MapOptions
-            {
-                Mode = MapOptions.Modes.Normal
-            });
-
+            __instance.ToggleMapVisible(mapOptions);
         }));
     }
 }

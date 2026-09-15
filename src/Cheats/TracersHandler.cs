@@ -4,62 +4,99 @@ namespace MalumMenu;
 
 public static class TracersHandler
 {
-    private const float MinTracerDistance = 2f;  // Red at this distance or closer
-    private const float MaxTracerDistance = 20f; // Green at this distance or farther
+    private const float MinTracerDistance = 2f;
+    private const float MaxTracerDistance = 20f;
 
-    // Draws a tracer from LocalPlayer to another Player.
+    // Draws a tracer from LocalPlayer to another player.
     public static void DrawPlayerTracer(PlayerPhysics playerPhysics)
     {
-        try
+        var localPlayer = PlayerControl.LocalPlayer;
+
+        if (playerPhysics == null ||
+            playerPhysics.myPlayer == null ||
+            localPlayer == null)
         {
-            var player = playerPhysics.myPlayer;
-            var isDead = player.Data.IsDead;
-            var isImpostor = player.Data.Role.IsImpostor;
-
-            var shouldDraw = isDead
-                ? CheatToggles.tracersGhosts
-                : (CheatToggles.tracersCrew && !isImpostor) || (CheatToggles.tracersImps && isImpostor);
-
-            var color = shouldDraw
-                ? GetTracerColor(player.transform.position, player.Data.Color, defaultColor: isDead ? Palette.White : player.Data.Role.TeamColor)
-                : Color.clear;
-
-            Utils.DrawTracer(player.gameObject, PlayerControl.LocalPlayer.gameObject, color);
+            return;
         }
-        catch { }
+
+        var player = playerPhysics.myPlayer;
+        var playerData = player.Data;
+
+        if (playerData == null || playerData.Role == null)
+            return;
+
+        var role = playerData.Role;
+        var isDead = playerData.IsDead;
+        var isImpostor = role.IsImpostor;
+
+        var shouldDraw = isDead
+            ? CheatToggles.tracersGhosts
+            : CheatToggles.tracersCrew && !isImpostor ||
+              CheatToggles.tracersImps && isImpostor;
+
+        var color = shouldDraw
+            ? GetTracerColor(
+                targetPosition: player.transform.position,
+                playerColor: playerData.Color,
+                defaultColor: isDead ? Palette.White : role.TeamColor)
+            : Color.clear;
+
+        Utils.DrawTracer(
+            player.gameObject,
+            localPlayer.gameObject,
+            color);
     }
 
-    // Draws a tracer from LocalPlayer to a dead body. Only draws tracers for unreported dead bodies.
+    // Draws a tracer from LocalPlayer to an unreported dead body.
     public static void DrawBodyTracer(DeadBody deadBody)
     {
         var color = CheatToggles.tracersBodies
-            ? GetTracerColor(deadBody.transform.position, GameData.Instance.GetPlayerById(deadBody.ParentId).Color, defaultColor: Color.yellow)
+            ? GetTracerColor(
+                targetPosition: deadBody.transform.position,
+                playerColor: GameData.Instance
+                    .GetPlayerById(deadBody.ParentId)
+                    .Color,
+                defaultColor: Color.yellow)
             : Color.clear;
 
-        Utils.DrawTracer(deadBody.gameObject, PlayerControl.LocalPlayer.gameObject, color);
+        Utils.DrawTracer(
+            deadBody.gameObject,
+            PlayerControl.LocalPlayer.gameObject,
+            color);
     }
 
-    // Resolves the tracer color based on the active toggle mode (distance, Player color, or default).
-    private static Color GetTracerColor(Vector3 targetPosition, Color playerColor, Color defaultColor)
+    // Resolves the tracer color based on the active toggle mode.
+    private static Color GetTracerColor(
+        Vector3 targetPosition,
+        Color playerColor,
+        Color defaultColor)
     {
         if (CheatToggles.distanceBasedTracers)
             return GetDistanceBasedColor(targetPosition);
 
-        if (CheatToggles.colorBasedTracers)
-            return playerColor;
-
-        return defaultColor;
+        return CheatToggles.colorBasedTracers
+            ? playerColor
+            : defaultColor;
     }
 
-    // Gets a color based on the distance between the LocalPlayer and a target position.
-    // Closer distances are red, medium distances are yellow, and farther distances are green.
+    // Gets a color based on the distance between LocalPlayer and the target.
     private static Color GetDistanceBasedColor(Vector3 targetPosition)
     {
-        var distance = Vector3.Distance(targetPosition, PlayerControl.LocalPlayer.transform.position);
-        var normalized = Mathf.InverseLerp(MinTracerDistance, MaxTracerDistance, distance);
+        var localPosition = PlayerControl.LocalPlayer.transform.position;
+        var distance = Vector3.Distance(targetPosition, localPosition);
+        var normalizedDistance = Mathf.InverseLerp(
+            MinTracerDistance,
+            MaxTracerDistance,
+            distance);
 
-        return normalized < 0.5f
-            ? Color.Lerp(Color.red, Color.yellow, normalized * 2f)
-            : Color.Lerp(Color.yellow, Color.green, (normalized - 0.5f) * 2f);
+        return normalizedDistance < 0.5f
+            ? Color.Lerp(
+                Color.red,
+                Color.yellow,
+                normalizedDistance * 2f)
+            : Color.Lerp(
+                Color.yellow,
+                Color.green,
+                (normalizedDistance - 0.5f) * 2f);
     }
 }

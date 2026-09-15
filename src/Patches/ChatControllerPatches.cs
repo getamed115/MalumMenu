@@ -35,14 +35,8 @@ public static class ChatController_AddChat
 
             // Determine if the message was sent by the local Player to align the bubble accordingly
             bool isLocalPlayer = sourcePlayer == PlayerControl.LocalPlayer;
-            if (isLocalPlayer)
-            {
-                pooledBubble.SetRight();
-            }
-            else
-            {
-                pooledBubble.SetLeft();
-            }
+
+            SetBubbleAlignment(pooledBubble, isLocalPlayer);
 
             // Check if the Player voted during a meeting to display the vote indicator on the chat bubble
             bool didVote = MeetingHud.Instance && MeetingHud.Instance.DidVote(sourcePlayer.PlayerId);
@@ -52,9 +46,7 @@ public static class ChatController_AddChat
             __instance.SetChatBubbleName(pooledBubble, sourcePlayerData, sourcePlayerData.IsDead, didVote, PlayerNameColor.Get(sourcePlayerData), null);
 
             // Assign the chat text and align all active chat layout elements
-            pooledBubble.SetText(chatText);
-            pooledBubble.AlignChildren();
-            __instance.AlignAllBubbles();
+            SetBubbleText(bubble: pooledBubble, chatText: chatText, chatController: __instance);
 
             // Trigger the notification dot bounce animation if the chat window is closed and not currently animating
             if (!__instance.IsOpenOrOpening && __instance.notificationRoutine == null)
@@ -65,7 +57,7 @@ public static class ChatController_AddChat
             // Play audio cue and set up notification toast if the message is from another Player and chat is closed
             if (!isLocalPlayer && !__instance.IsOpenOrOpening)
             {
-                SoundManager.Instance.PlaySound(__instance.messageSound, false).pitch = 0.5f + sourcePlayer.PlayerId / 15f;
+                //SoundManager.Instance.PlaySound(__instance.messageSound, false).pitch = 0.5f + sourcePlayer.PlayerId / 15f;
                 __instance.chatNotification.SetUp(sourcePlayer, chatText);
             }
         }
@@ -77,5 +69,24 @@ public static class ChatController_AddChat
         }
 
         return false; // Skips the original method completely
+    }
+
+    private static void SetBubbleAlignment(ChatBubble bubble, bool isLocalPlayer)
+    {
+        if (isLocalPlayer)
+        {
+            bubble.SetRight();
+        }
+        else
+        {
+            bubble.SetLeft();
+        }
+    }
+
+    private static void SetBubbleText(ChatBubble bubble, string chatText, ChatController chatController)
+    {
+        bubble.SetText(chatText);
+        bubble.AlignChildren();
+        chatController.AlignAllBubbles();
     }
 }

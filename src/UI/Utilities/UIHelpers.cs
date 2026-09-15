@@ -6,19 +6,19 @@ public static class UIHelpers
 {
     public static void ApplyUIColor()
     {
-        var configHtmlColor = MalumMenu.menuHtmlColor.Value;
+        var htmlColor = MalumMenu.menuHtmlColor.Value?.Trim();
 
-        if (!ColorUtility.TryParseHtmlString(configHtmlColor, out var uiColor))
+        if (string.IsNullOrEmpty(htmlColor))
         {
-            if (!configHtmlColor.StartsWith("#"))
-            {
-                if (ColorUtility.TryParseHtmlString("#" + configHtmlColor, out uiColor))
-                {
-                    GUI.backgroundColor = uiColor;
-                }
-            }
+            return;
         }
-        else
+
+        if (!htmlColor.StartsWith('#'))
+        {
+            htmlColor = $"#{htmlColor}";
+        }
+
+        if (ColorUtility.TryParseHtmlString(htmlColor, out var uiColor))
         {
             GUI.backgroundColor = uiColor;
         }

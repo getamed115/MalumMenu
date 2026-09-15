@@ -8,7 +8,7 @@ namespace MalumMenu;
 [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
 public static class MeetingHud_Update
 {
-    public static HashSet<int> votedPlayers = new HashSet<int>();
+    public static HashSet<int> votedPlayers = [];
 
     public static void Prefix(MeetingHud __instance)
     {
@@ -73,7 +73,8 @@ public static class MeetingHud_Update
 
         foreach (var spriteRenderer in voteSpreader.Votes)
         {
-            spriteRenderer.gameObject.SetActive(CheatToggles.revealVotes);
+            if (spriteRenderer)
+                spriteRenderer.gameObject.SetActive(CheatToggles.revealVotes);
         }
     }
 }

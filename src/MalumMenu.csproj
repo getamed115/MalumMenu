@@ -35,7 +35,7 @@
 
 		<Exec Command="powershell -NoProfile -Command &quot;$old = if (Test-Path '$(SizeRecordFile)') { [long](Get-Content '$(SizeRecordFile)' -Raw) } else { 0 }; $new = (Get-Item '$(TargetPath)').Length; $diff = $new - $old; $sign = if ($diff -ge 0) { '+' } else { '' }; Write-Host ('[BUILD] DLL Size: {0:N2} KB ({1}{2:N2} KB change)' -f ($new / 1KB), $sign, ($diff / 1KB)) -ForegroundColor Cyan&quot;" />
 
-		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginDestination)" UseSymboliclinksIfPossible="true" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginDestination)" UseSymboliclinksIfPossible="false" />
 		<Message Text="[BUILD] Successfully copied $(TargetFileName) to $(PluginDestination)" Importance="high" />
 	</Target>
 

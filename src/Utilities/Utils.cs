@@ -1,12 +1,9 @@
 using AmongUs.GameOptions;
-using HarmonyLib;
-using Il2CppInterop.Runtime.Injection;
 using InnerNet;
 using Sentry.Internal.Extensions;
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace MalumMenu;
 
@@ -51,12 +48,7 @@ public static class Utils
     // Draws a tracer line between two GameObjects
     public static void DrawTracer(GameObject sourceObject, GameObject targetObject, Color color)
     {
-        var lineRenderer = sourceObject.GetComponent<LineRenderer>();
-
-        if (!lineRenderer)
-        {
-            lineRenderer = sourceObject.AddComponent<LineRenderer>();
-        }
+        var lineRenderer = sourceObject.GetComponent<LineRenderer>() ?? sourceObject.AddComponent<LineRenderer>();
 
         lineRenderer.SetVertexCount(2);
         lineRenderer.SetWidth(0.02F, 0.02F);
@@ -71,22 +63,13 @@ public static class Utils
         lineRenderer.SetPosition(1, targetObject.transform.position);
     }
 
-    // Returns whether the ChatUI should be active or not
-
     // Gets the distance between two players
-    public static float GetDistanceBetween(PlayerControl source, PlayerControl target)
-    {
-        Vector2 vector = target.GetTruePosition() - source.GetTruePosition();
-        float magnitude = vector.magnitude;
-
-        return magnitude;
-    }
+    // Gets the distance between two players.
+    public static float GetDistanceBetween(PlayerControl source, PlayerControl target) => Vector2.Distance(source.GetTruePosition(), target.GetTruePosition());
 
     // Gets a UnityEngine.KeyCode from a string
-    public static KeyCode StringToKeycode(string keyCodeStr)
-    {
-        return Enum.TryParse(keyCodeStr, ignoreCase: true, out KeyCode keyCode) ? keyCode : KeyCode.Delete;
-    }
+    public static KeyCode StringToKeycode(string keyCodeStr) => Enum.TryParse(keyCodeStr, ignoreCase: true, out KeyCode keyCode) ? keyCode : KeyCode.Delete;
+
     public static string PlatformTypeToString(Platforms platform) =>
         platform switch
         {
@@ -120,8 +103,7 @@ public static class Utils
     {
         var nameTag = playerName;
 
-        if (playerInfo.Role.IsNull() || playerInfo.IsNull() || playerInfo.Disconnected ||
-            playerInfo.Object.CurrentOutfit.IsNull()) return nameTag;
+        if (playerInfo.Role.IsNull() || playerInfo.IsNull() || playerInfo.Disconnected || playerInfo.Object.CurrentOutfit.IsNull()) return nameTag;
 
         var player = AmongUsClient.Instance.GetClientFromPlayerInfo(playerInfo);
         var host = AmongUsClient.Instance.GetHost();
@@ -129,9 +111,6 @@ public static class Utils
 
         var platform = "Unknown";
         if (!isLocalGame) try { platform = PlatformTypeToString(player.PlatformData.Platform); } catch { }
-
-        //var puid = Player.ProductUserId;
-        //var friendcode = Player.FriendCode;
 
         var roleColor = ColorUtility.ToHtmlStringRGB(playerInfo.Role.TeamColor);
 

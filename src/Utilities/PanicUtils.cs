@@ -7,7 +7,6 @@ namespace MalumMenu.Utilities;
 
 public class PanicUtils
 {
-
     public class PanicCleaner : MonoBehaviour
     {
         // Creates a PanicCleaner to unpatch Harmony
@@ -32,8 +31,6 @@ public class PanicUtils
     public static void Panic()
     {
         MalumMenu.isPanicked = true;
-
-        //CheatToggles.DisableAll();
 
         var stamp = ModManager.Instance.ModStamp;
         if (stamp) stamp.enabled = false;
