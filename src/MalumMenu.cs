@@ -12,7 +12,7 @@ namespace MalumMenu;
 public partial class MalumMenu : BasePlugin
 {
     public static MalumMenu Plugin { get; private set; }
-    public new static ManualLogSource Log { get; private set; }
+    public static new ManualLogSource Log { get; private set; }
     public static MenuUI menuUI { get; private set; }
 
     public Harmony Harmony { get; } = new(Id);
@@ -35,19 +35,43 @@ public partial class MalumMenu : BasePlugin
 
         SetupConfig();
         InitializeDefaultCheats();
-        if (noTelemetry.Value) DisableTelemetry();
+        DisableTelemetry();
 
         Harmony.PatchAll();
         menuUI = AddComponent<MenuUI>();
 
         void SetupConfig()
         {
-            menuKeybind = Config.Bind("MalumMenu.GUI", "Keybind", "Delete", "The keyboard key used to toggle the GUI...");
-            menuHtmlColor = Config.Bind("MalumMenu.GUI", "Color", "", "A custom color for your MalumMenu GUI...");
-            menuOpenOnMouse = Config.Bind("MalumMenu.GUI", "OpenOnMouse", false, "Always open GUI at mouse position");
-            menuKeepSubwindowsOpen = Config.Bind("MalumMenu.GUI", "KeepSubwindowsOpen", false, "Keep subwindows open");
-            menuAllowClickThrough = Config.Bind("MalumMenu.GUI", "AllowClicksThrough", true, "Clicks pass through GUI");
-            noTelemetry = Config.Bind("MalumMenu.Privacy", "NoTelemetry", true, "Stop Among Us from collecting analytics");
+            menuKeybind = Config.Bind(
+                "MalumMenu.GUI",
+                "Keybind",
+                "Delete",
+                "The keyboard key used to toggle the GUI..."
+            );
+            menuHtmlColor = Config.Bind(
+                "MalumMenu.GUI",
+                "Color",
+                "",
+                "A custom color for your MalumMenu GUI..."
+            );
+            menuOpenOnMouse = Config.Bind(
+                "MalumMenu.GUI",
+                "OpenOnMouse",
+                false,
+                "Always open GUI at mouse position"
+            );
+            menuKeepSubwindowsOpen = Config.Bind(
+                "MalumMenu.GUI",
+                "KeepSubwindowsOpen",
+                false,
+                "Keep subwindows open"
+            );
+            menuAllowClickThrough = Config.Bind(
+                "MalumMenu.GUI",
+                "AllowClicksThrough",
+                true,
+                "Clicks pass through GUI"
+            );
         }
 
         void InitializeDefaultCheats()
