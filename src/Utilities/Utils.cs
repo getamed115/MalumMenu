@@ -116,10 +116,10 @@ public static class Utils
 
         var hostString = player == host ? "Host - " : "";
 
-        if (CheatToggles.seeRoles)
+        if (CheatState.seeRoles)
         {
 
-            if (CheatToggles.seePlayerInfo)
+            if (CheatState.seePlayerInfo)
             {
                 if (isChat)
                 {
@@ -143,7 +143,7 @@ public static class Utils
         }
         else
         {
-            if (CheatToggles.seePlayerInfo)
+            if (CheatState.seePlayerInfo)
             {
                 if (PlayerControl.LocalPlayer.Data.Role.NameColor == playerInfo.Role.NameColor)
                 {

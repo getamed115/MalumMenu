@@ -54,32 +54,32 @@ public class ESPTab : ITab
             GUILayout.ExpandWidth(true)
         );
 
-        CheatToggles.seePlayerInfo = DrawToggle(
-            CheatToggles.seePlayerInfo,
+        CheatState.seePlayerInfo = DrawToggle(
+            CheatState.seePlayerInfo,
             "See Player Info"
         );
 
-        CheatToggles.seeRoles = DrawToggle(
-            CheatToggles.seeRoles,
+        CheatState.seeRoles = DrawToggle(
+            CheatState.seeRoles,
             "See Roles"
         );
 
-        CheatToggles.seeGhosts = DrawToggle(
-            CheatToggles.seeGhosts,
+        CheatState.seeGhosts = DrawToggle(
+            CheatState.seeGhosts,
             "See Ghosts"
         );
 
-        CheatToggles.noShadows = DrawToggle(
-            CheatToggles.noShadows,
+        CheatState.noShadows = DrawToggle(
+            CheatState.noShadows,
             "No Shadows"
         );
-        CheatToggles.revealVotes = DrawToggle(
-            CheatToggles.revealVotes,
+        CheatState.revealVotes = DrawToggle(
+            CheatState.revealVotes,
             "Reveal Votes"
         );
 
-        CheatToggles.seeLobbyInfo = DrawToggle(
-            CheatToggles.seeLobbyInfo,
+        CheatState.seeLobbyInfo = DrawToggle(
+            CheatState.seeLobbyInfo,
             "See Lobby Info"
         );
     }
@@ -100,18 +100,18 @@ public class ESPTab : ITab
                 previousEnabledState &&
                 cameraOptionsAvailable;
 
-            CheatToggles.zoomOut = DrawIndentedToggle(
-                CheatToggles.zoomOut,
+            CheatState.zoomOut = DrawIndentedToggle(
+                CheatState.zoomOut,
                 "Zoom Out"
             );
 
-            CheatToggles.spectate = DrawIndentedToggle(
-                CheatToggles.spectate,
+            CheatState.spectate = DrawIndentedToggle(
+                CheatState.spectate,
                 "Spectate"
             );
 
-            CheatToggles.freecam = DrawIndentedToggle(
-                CheatToggles.freecam,
+            CheatState.freecam = DrawIndentedToggle(
+                CheatState.freecam,
                 "Freecam"
             );
         }
@@ -129,33 +129,33 @@ public class ESPTab : ITab
             GUILayout.ExpandWidth(true)
         );
 
-        CheatToggles.tracersCrew = DrawIndentedToggle(
-            CheatToggles.tracersCrew,
+        CheatState.tracersCrew = DrawIndentedToggle(
+            CheatState.tracersCrew,
             "Crewmates"
         );
 
-        CheatToggles.tracersImps = DrawIndentedToggle(
-            CheatToggles.tracersImps,
+        CheatState.tracersImps = DrawIndentedToggle(
+            CheatState.tracersImps,
             "Impostors"
         );
 
-        CheatToggles.tracersGhosts = DrawIndentedToggle(
-            CheatToggles.tracersGhosts,
+        CheatState.tracersGhosts = DrawIndentedToggle(
+            CheatState.tracersGhosts,
             "Ghosts"
         );
 
-        CheatToggles.tracersBodies = DrawIndentedToggle(
-            CheatToggles.tracersBodies,
+        CheatState.tracersBodies = DrawIndentedToggle(
+            CheatState.tracersBodies,
             "Dead Bodies"
         );
 
-        CheatToggles.colorBasedTracers = DrawIndentedToggle(
-            CheatToggles.colorBasedTracers,
+        CheatState.colorBasedTracers = DrawIndentedToggle(
+            CheatState.colorBasedTracers,
             "Color-based"
         );
 
-        CheatToggles.distanceBasedTracers = DrawIndentedToggle(
-            CheatToggles.distanceBasedTracers,
+        CheatState.distanceBasedTracers = DrawIndentedToggle(
+            CheatState.distanceBasedTracers,
             "Distance-based"
         );
     }
@@ -168,23 +168,23 @@ public class ESPTab : ITab
             GUILayout.ExpandWidth(true)
         );
 
-        CheatToggles.mapCrew = DrawIndentedToggle(
-            CheatToggles.mapCrew,
+        CheatState.mapCrew = DrawIndentedToggle(
+            CheatState.mapCrew,
             "Crewmates"
         );
 
-        CheatToggles.mapImps = DrawIndentedToggle(
-            CheatToggles.mapImps,
+        CheatState.mapImps = DrawIndentedToggle(
+            CheatState.mapImps,
             "Impostors"
         );
 
-        CheatToggles.mapGhosts = DrawIndentedToggle(
-            CheatToggles.mapGhosts,
+        CheatState.mapGhosts = DrawIndentedToggle(
+            CheatState.mapGhosts,
             "Ghosts"
         );
 
-        CheatToggles.colorBasedMap = DrawIndentedToggle(
-            CheatToggles.colorBasedMap,
+        CheatState.colorBasedMap = DrawIndentedToggle(
+            CheatState.colorBasedMap,
             "Color-based"
         );
     }

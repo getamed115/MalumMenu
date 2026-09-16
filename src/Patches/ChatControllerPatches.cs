@@ -12,7 +12,7 @@ public static class ChatController_AddChat
     public static bool Prefix(PlayerControl sourcePlayer, string chatText, bool censor, ChatController __instance)
     {
         // Simply run original method if seeGhosts is disabled or LocalPlayer already dead
-        if (!CheatToggles.seeGhosts || PlayerControl.LocalPlayer.Data.IsDead) return true;
+        if (!CheatState.seeGhosts || PlayerControl.LocalPlayer.Data.IsDead) return true;
 
         // Ensure both the source Player sending the message and the local Player exist
         if (!sourcePlayer || !PlayerControl.LocalPlayer) return true;

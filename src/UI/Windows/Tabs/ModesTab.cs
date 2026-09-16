@@ -12,17 +12,25 @@ public class ModesTab : ITab
             GUILayout.ExpandWidth(true)
         );
 
-        CheatToggles.stealthMode = GUILayout.Toggle(
-            CheatToggles.stealthMode,
+        CheatState.stealthMode = GUILayout.Toggle(
+            CheatState.stealthMode,
             "Stealth Mode",
             GUIStylePreset.NormalToggle,
             GUILayout.ExpandWidth(true),
             GUILayout.Height(32f)
         );
 
-        CheatToggles.panicMode = GUILayout.Toggle(
-            CheatToggles.panicMode,
+        CheatState.panicMode = GUILayout.Toggle(
+            CheatState.panicMode,
             "Panic Mode",
+            GUIStylePreset.NormalToggle,
+            GUILayout.ExpandWidth(true),
+            GUILayout.Height(32f)
+        );
+
+        CheatState.fakePanicMode = GUILayout.Toggle(
+            CheatState.fakePanicMode,
+            "Fake Panic Mode",
             GUIStylePreset.NormalToggle,
             GUILayout.ExpandWidth(true),
             GUILayout.Height(32f)

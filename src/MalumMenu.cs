@@ -52,9 +52,9 @@ public partial class MalumMenu : BasePlugin
 
         void InitializeDefaultCheats()
         {
-            CheatToggles.unlockFeatures = true;
-            CheatToggles.freeCosmetics = true;
-            CheatToggles.avoidPenalties = true;
+            CheatState.unlockFeatures = true;
+            CheatState.freeCosmetics = true;
+            CheatState.avoidPenalties = true;
         }
 
         void DisableTelemetry()

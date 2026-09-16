@@ -10,17 +10,17 @@ public static class MalumPPMCheats
 
     public static void SpectatePPM()
     {
-        if (CheatToggles.spectate)
+        if (CheatState.spectate)
         {
 
             if (!_spectateActive)
             {
 
                 // Close any Player pick menus already open & their cheats
-                if (PlayerPickMenu.playerpickMenu != null)
+                if (PlayerPickMenu.Instance != null)
                 {
-                    PlayerPickMenu.playerpickMenu.Close();
-                    CheatToggles.DisablePPMCheats("spectate");
+                    PlayerPickMenu.Instance.Close();
+                    CheatState.DisablePPMCheats("spectate");
                 }
 
                 List<NetworkedPlayerInfo> playerDataList = new List<NetworkedPlayerInfo>();
@@ -37,20 +37,20 @@ public static class MalumPPMCheats
                 // Player pick menu made for spectating the targeted Player
                 PlayerPickMenu.OpenPlayerPickMenu(playerDataList, (Action)(() =>
                 {
-                    Camera.main.gameObject.GetComponent<FollowerCamera>().SetTarget(PlayerPickMenu.targetPlayerData.Object);
+                    Camera.main.gameObject.GetComponent<FollowerCamera>().SetTarget(PlayerPickMenu.TargetPlayerData.Object);
                 }));
 
                 _spectateActive = true;
 
                 PlayerControl.LocalPlayer.moveable = false; // Can't move while spectating
 
-                CheatToggles.freecam = false; // Disable incompatible cheats while spectating
+                CheatState.freecam = false; // Disable incompatible cheats while spectating
             }
 
             // Deactivate cheat if menu is closed and no one is getting spectated
-            if (PlayerPickMenu.playerpickMenu == null && Camera.main.gameObject.GetComponent<FollowerCamera>().Target == PlayerControl.LocalPlayer)
+            if (PlayerPickMenu.Instance == null && Camera.main.gameObject.GetComponent<FollowerCamera>().Target == PlayerControl.LocalPlayer)
             {
-                CheatToggles.spectate = false;
+                CheatState.spectate = false;
                 PlayerControl.LocalPlayer.moveable = true;
             }
         }

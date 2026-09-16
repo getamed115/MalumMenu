@@ -19,7 +19,7 @@ public static class PlayerBanData_BanMinutesLeft_Getter
     // Postfix patch of PlayerBanData.BanMinutesLeft Getter method to remove disconnect penalty
     public static void Postfix(PlayerBanData __instance, ref int __result)
     {
-        if (!CheatToggles.avoidPenalties) return;
+        if (!CheatState.avoidPenalties) return;
 
         __instance.BanPoints = 0f; // Removes all BanPoints
         __result = 0; // Removes all BanMinutes
@@ -35,7 +35,7 @@ public static class GameContainer_SetupGameInfo
     public static void Postfix(GameContainer __instance)
     {
         // Early exit with added null safety checks to prevent game crashes
-        if (!CheatToggles.seeLobbyInfo || __instance?.gameListing == null || __instance?.capacity == null)
+        if (!CheatState.seeLobbyInfo || __instance?.gameListing == null || __instance?.capacity == null)
             return;
 
         var listing = __instance.gameListing;

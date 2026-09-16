@@ -26,7 +26,7 @@ public static class MeetingHud_Update
         // Reveal skipped votes
         if (__instance.SkippedVoting)
         {
-            __instance.SkippedVoting.SetActive(CheatToggles.revealVotes);
+            __instance.SkippedVoting.SetActive(CheatState.revealVotes);
         }
     }
 
@@ -74,7 +74,7 @@ public static class MeetingHud_Update
         foreach (var spriteRenderer in voteSpreader.Votes)
         {
             if (spriteRenderer)
-                spriteRenderer.gameObject.SetActive(CheatToggles.revealVotes);
+                spriteRenderer.gameObject.SetActive(CheatState.revealVotes);
         }
     }
 }

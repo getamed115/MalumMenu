@@ -30,9 +30,9 @@ public static class TracersHandler
         var isImpostor = role.IsImpostor;
 
         var shouldDraw = isDead
-            ? CheatToggles.tracersGhosts
-            : CheatToggles.tracersCrew && !isImpostor ||
-              CheatToggles.tracersImps && isImpostor;
+            ? CheatState.tracersGhosts
+            : CheatState.tracersCrew && !isImpostor ||
+              CheatState.tracersImps && isImpostor;
 
         var color = shouldDraw
             ? GetTracerColor(
@@ -50,7 +50,7 @@ public static class TracersHandler
     // Draws a tracer from LocalPlayer to an unreported dead body.
     public static void DrawBodyTracer(DeadBody deadBody)
     {
-        var color = CheatToggles.tracersBodies
+        var color = CheatState.tracersBodies
             ? GetTracerColor(
                 targetPosition: deadBody.transform.position,
                 playerColor: GameData.Instance
@@ -71,10 +71,10 @@ public static class TracersHandler
         Color playerColor,
         Color defaultColor)
     {
-        if (CheatToggles.distanceBasedTracers)
+        if (CheatState.distanceBasedTracers)
             return GetDistanceBasedColor(targetPosition);
 
-        return CheatToggles.colorBasedTracers
+        return CheatState.colorBasedTracers
             ? playerColor
             : defaultColor;
     }

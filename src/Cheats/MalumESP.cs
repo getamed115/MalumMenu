@@ -13,7 +13,7 @@ public static class MalumESP
         var transform = mushroom.sporeMask.transform;
         transform.position = transform.position with
         {
-            z = CheatToggles.noShadows ? -1f : 5f
+            z = CheatState.noShadows ? -1f : 5f
         };
     }
 
@@ -21,7 +21,7 @@ public static class MalumESP
     {
         var camera = Camera.main;
 
-        return CheatToggles.noShadows
+        return CheatState.noShadows
             || camera.orthographicSize > 3f
             || camera.TryGetComponent<FollowerCamera>(out var follower)
                 && follower.Target != PlayerControl.LocalPlayer;
@@ -29,7 +29,7 @@ public static class MalumESP
 
     public static void ZoomOut(HudManager hudManager)
     {
-        if (CheatToggles.zoomOut)
+        if (CheatState.zoomOut)
         {
             if (hudManager.Chat.IsOpenOrOpening || PlayerCustomizationMenu.Instance || (Utils.isLobby && (FriendsListUI.Instance.IsOpen ||
                 GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.active || GameStartManager.Instance.RulesEditPanel))) return;
@@ -84,12 +84,12 @@ public static class MalumESP
         Vector3 targetPosition;
         Vector3 targetScale;
 
-        if (CheatToggles.seeRoles && CheatToggles.seePlayerInfo)
+        if (CheatState.seeRoles && CheatState.seePlayerInfo)
         {
             targetPosition = new Vector3(0.33f, 0.08f, 0f);
             targetScale = new Vector3(0.75f, 0.75f, 0.75f);
         }
-        else if (CheatToggles.seeRoles || CheatToggles.seePlayerInfo)
+        else if (CheatState.seeRoles || CheatState.seePlayerInfo)
         {
             targetPosition = new Vector3(0.3384f, 0.1125f, -0.1f);
             targetScale = new Vector3(0.9f, 1f, 1f);
@@ -157,15 +157,15 @@ public static class MalumESP
                         defaultOutfit.PlayerName
                     );
 
-                if (CheatToggles.seeRoles &&
-                    CheatToggles.seePlayerInfo)
+                if (CheatState.seeRoles &&
+                    CheatState.seePlayerInfo)
                 {
                     playerState.NameText.transform.localPosition = new Vector3(0.33f, 0.08f, 0f);
 
                     playerState.NameText.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                 }
-                else if (CheatToggles.seeRoles ||
-                         CheatToggles.seePlayerInfo)
+                else if (CheatState.seeRoles ||
+                         CheatState.seePlayerInfo)
                 {
                     playerState.NameText.transform.localPosition =
                         new Vector3(0.3384f, 0.1125f, -0.1f);
@@ -206,8 +206,8 @@ public static class MalumESP
         // 4. Calculate the Y offset to prevent overlapping
         float yOffset = 0f;
 
-        if (CheatToggles.seeRoles) yOffset += 0.093f;
-        if (CheatToggles.seePlayerInfo) yOffset += 0.093f;
+        if (CheatState.seeRoles) yOffset += 0.093f;
+        if (CheatState.seePlayerInfo) yOffset += 0.093f;
 
         // 5. Apply the transform once
         player.cosmetics.nameText.transform.localPosition = new Vector3(0f, yOffset, 0f);
@@ -254,12 +254,12 @@ public static class MalumESP
             return;
 
         if (player.Data.IsDead && !localPlayer.Data.IsDead)
-            player.Visible = CheatToggles.seeGhosts;
+            player.Visible = CheatState.seeGhosts;
     }
 
     public static void FreecamCheat()
     {
-        if (CheatToggles.freecam)
+        if (CheatState.freecam)
         {
             // Completely disable FollowerCamera
             if (!_freecamActive)

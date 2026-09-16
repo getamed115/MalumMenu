@@ -9,6 +9,6 @@ public static class PlayerControl_TurnOnProtection
     // otherwise preserve the original value.
     public static void Prefix(ref bool visible)
     {
-        visible |= CheatToggles.seeGhosts;
+        visible |= CheatState.seeGhosts;
     }
 }

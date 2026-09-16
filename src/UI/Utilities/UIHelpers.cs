@@ -9,18 +9,12 @@ public static class UIHelpers
         var htmlColor = MalumMenu.menuHtmlColor.Value?.Trim();
 
         if (string.IsNullOrEmpty(htmlColor))
-        {
             return;
-        }
 
         if (!htmlColor.StartsWith('#'))
-        {
             htmlColor = $"#{htmlColor}";
-        }
 
         if (ColorUtility.TryParseHtmlString(htmlColor, out var uiColor))
-        {
             GUI.backgroundColor = uiColor;
-        }
     }
 }

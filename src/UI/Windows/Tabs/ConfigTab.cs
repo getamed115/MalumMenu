@@ -12,23 +12,23 @@ public class ConfigTab : ITab
             GUILayout.ExpandWidth(true)
         );
 
-        CheatToggles.openConfig = DrawToggle(
-            CheatToggles.openConfig,
+        CheatState.openConfig = DrawToggle(
+            CheatState.openConfig,
             "Open Config"
         );
 
-        CheatToggles.reloadConfig = DrawToggle(
-            CheatToggles.reloadConfig,
+        CheatState.reloadConfig = DrawToggle(
+            CheatState.reloadConfig,
             "Reload Config"
         );
 
-        CheatToggles.saveProfile = DrawToggle(
-            CheatToggles.saveProfile,
+        CheatState.saveProfile = DrawToggle(
+            CheatState.saveProfile,
             "Save to Profile"
         );
 
-        CheatToggles.loadProfile = DrawToggle(
-            CheatToggles.loadProfile,
+        CheatState.loadProfile = DrawToggle(
+            CheatState.loadProfile,
             "Load from Profile"
         );
 

@@ -12,8 +12,8 @@ public class ChatTab : ITab
             GUILayout.ExpandWidth(true)
         );
 
-        CheatToggles.enableChat = GUILayout.Toggle(
-            CheatToggles.enableChat,
+        CheatState.enableChat = GUILayout.Toggle(
+            CheatState.enableChat,
             "Enable Chat",
             GUIStylePreset.NormalToggle,
             GUILayout.ExpandWidth(true),

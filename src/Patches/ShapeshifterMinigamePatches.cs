@@ -13,9 +13,9 @@ public static class ShapeshifterMinigame_Begin
     // Prefix patch of ShapeshifterMinigame.Begin to implement Player pick menu logic
     public static bool Prefix(ShapeshifterMinigame __instance)
     {
-        if (!PlayerPickMenu.isActive) return true; // Open normal shapeshifter menu if not active
+        if (!PlayerPickMenu.IsActive) return true; // Open normal shapeshifter menu if not active
 
-        List<NetworkedPlayerInfo> playerList = PlayerPickMenu.customPlayerList;
+        List<NetworkedPlayerInfo> playerList = PlayerPickMenu.PlayerList;
 
         __instance.potentialVictims = new List<ShapeshifterPanel>();
         var selectableElements = new List<UiElement>();
@@ -39,7 +39,7 @@ public static class ShapeshifterMinigame_Begin
             selectableElements,
             false);
 
-        PlayerPickMenu.isActive = false;
+        PlayerPickMenu.IsActive = false;
 
         return false; // Skip original method when active
     }
@@ -58,8 +58,8 @@ public static class ShapeshifterMinigame_Begin
 
         panel.SetPlayer(index, playerData, (Il2CppSystem.Action)(() =>
         {
-            PlayerPickMenu.targetPlayerData = playerData; // Save targeted Player
-            PlayerPickMenu.customAction.Invoke();          // Custom action set by openPlayerPickMenu
+            PlayerPickMenu.TargetPlayerData = playerData; // Save targeted Player
+            PlayerPickMenu.SelectionAction.Invoke();          // Custom action set by openPlayerPickMenu
             instance.Close();
         }));
 
@@ -77,8 +77,8 @@ public static class ShapeshifterMinigame_Begin
         var nameText = panel.NameText;
         nameText.text = Utils.GetNameTag(playerData, playerData.DefaultOutfit.PlayerName);
 
-        bool showRoles = CheatToggles.seeRoles;
-        bool showPlayerInfo = CheatToggles.seePlayerInfo;
+        bool showRoles = CheatState.seeRoles;
+        bool showPlayerInfo = CheatState.seePlayerInfo;
 
         Vector3 position;
         Vector3 scale = new(0.9f, 1f, 1f);
@@ -106,7 +106,7 @@ public static class ShapeshifterPanel_SetPlayer
     // Prefix patch of ShapeshifterPanel.SetPlayer to allow usage of PlayerPickMenu in lobbies
     public static bool Prefix(ShapeshifterPanel __instance, int index, NetworkedPlayerInfo playerInfo, Il2CppSystem.Action onShift)
     {
-        if (!PlayerPickMenu.isActive) return true; // Open normal shapeshifter menu if not active
+        if (!PlayerPickMenu.IsActive) return true; // Open normal shapeshifter menu if not active
 
         __instance.shapeshift = onShift;
 

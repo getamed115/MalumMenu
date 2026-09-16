@@ -9,7 +9,7 @@ public static class LogicOptions_GetAnonymousVotes
     // otherwise preserve the original result.
     public static void Postfix(ref bool __result)
     {
-        __result &= !CheatToggles.revealVotes;
+        __result &= !CheatState.revealVotes;
     }
 }
 
@@ -20,6 +20,6 @@ public static class LogicOptionsNormal_GetAnonymousVotes
     // otherwise preserve the original result.
     public static void Postfix(ref bool __result)
     {
-        __result &= !CheatToggles.revealVotes;
+        __result &= !CheatState.revealVotes;
     }
 }

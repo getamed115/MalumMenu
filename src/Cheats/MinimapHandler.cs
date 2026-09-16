@@ -28,7 +28,7 @@ public static class MinimapHandler
     /// </summary>
     /// <returns>The <see cref="bool"/></returns>
     public static bool IsCheatEnabled() =>
-        CheatToggles.mapCrew || CheatToggles.mapGhosts || CheatToggles.mapImps;
+        CheatState.mapCrew || CheatState.mapGhosts || CheatState.mapImps;
 
     /// <summary>
     /// The HandleHerePoint
@@ -52,8 +52,8 @@ public static class MinimapHandler
         bool isImpostor = playerData.Role.IsImpostor;
 
         // 1. Determine Visibility
-        bool showAlive = !isDead && ((isImpostor && CheatToggles.mapImps) || (!isImpostor && CheatToggles.mapCrew));
-        bool showDead = isDead && CheatToggles.mapGhosts;
+        bool showAlive = !isDead && ((isImpostor && CheatState.mapImps) || (!isImpostor && CheatState.mapCrew));
+        bool showDead = isDead && CheatState.mapGhosts;
         bool isVisible = showAlive || showDead;
 
         herePoint.Sprite.gameObject.SetActive(isVisible);
@@ -62,7 +62,7 @@ public static class MinimapHandler
         if (!isVisible) return;
 
         // 2. Determine Color
-        Color iconColor = CheatToggles.colorBasedMap ? playerData.Color
+        Color iconColor = CheatState.colorBasedMap ? playerData.Color
             : (isDead ? Palette.White : playerData.Role.TeamColor);
 
         // 3. Apply Visuals

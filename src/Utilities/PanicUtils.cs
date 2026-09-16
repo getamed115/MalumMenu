@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using System.Reflection;
+using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,6 +37,11 @@ public class PanicUtils
         var stamp = ModManager.Instance.ModStamp;
         if (stamp) stamp.enabled = false;
 
+
+        CheatState.DisableAllExcept(
+            nameof(CheatState.stealthMode)
+        );
+
         Scene scene = SceneManager.GetActiveScene();
 
         if (scene.name == "MainMenu" || scene.name == "MatchMaking")
@@ -44,5 +51,14 @@ public class PanicUtils
 
         UnityEngine.Object.Destroy(MalumMenu.menuUI);
         PanicCleaner.Create();
+    }
+
+
+    public static void FakePanic()
+    {
+        CheatState.DisableAllExcept(
+            nameof(CheatState.stealthMode)
+        );
+        CheatState.stealthMode = true;
     }
 }
